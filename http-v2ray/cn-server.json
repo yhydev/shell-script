@@ -1,0 +1,98 @@
+{
+  "log" : {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "port": 8080, 
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "b831381d-6324-4d53-ad4f-8cda48b30811",
+            "level": 1,
+            "alterId": 64
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "tcpSettings": {
+          "header": { 
+            "type": "http",
+            "response": {
+              "version": "1.1",
+              "status": "200",
+              "reason": "OK",
+              "headers": {
+                "Content-Type": ["application/octet-stream", "application/x-msdownload", "text/html", "application/x-shockwave-flash"],
+                "Transfer-Encoding": ["chunked"],
+                "Connection": ["keep-alive"],
+                "Pragma": "no-cache"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {"tag":"direct",
+      "protocol": "freedom",
+      "settings": {}
+    },  {
+		"tag": "vmess",
+		"protocol": "vmess",
+		"settings": {
+			"vnext": [{
+				"address": "fq.404page.org",
+				"port": 80,
+				"users": [{
+					"id": "d8a11d33-431d-f9ff-1e47-d76f38dec7bd",
+					"level": 1,
+					"alterId": 64
+				}]
+			}]
+		},
+		"streamSettings": {
+			"network": "kcp",
+			"kcpSettings": {
+				"mtu": 1350,
+				"tti": 20,
+				"uplinkCapacity": 5,
+				"downlinkCapacity": 100,
+				"congestion": true,
+				"readBufferSize": 1,
+				"writeBufferSize": 1,
+				"header": {
+					"type": "none"
+				}
+			}
+		}
+	} 
+    ,
+    {
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+      "rules": [
+        {
+          "type": "field",
+          "domain": ["geosite:cn"],
+          "outboundTag": "direct"
+        },{
+		"type":"field",
+		"domain":["regexp:.+"],
+		"outboundTag":"vmess"
+	}
+      ]
+    
+  }
+}
+
