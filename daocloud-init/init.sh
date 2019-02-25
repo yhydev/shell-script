@@ -11,4 +11,4 @@ sed -i 's/PermitRootLogin/PermitRootLogin yes #/g' /etc/ssh/sshd_config
 service ssh restart
 
 
-apt-get update && apt-get install python-pip && pip install python
+apt-get update && apt-get install -y python-pip && pip install docker
